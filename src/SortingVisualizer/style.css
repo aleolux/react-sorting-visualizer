@@ -1,20 +1,38 @@
-.grid-container {
-    display: grid;
-}
-
-.visualizer-container {
+.app-wrapper {
     display: flex;
     flex-direction: column;
-}
-
-.flex-container {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-end;
+    min-height: 100vh;
 }
 
 .array-bar {
-    background-color: blue;
-    border-radius: 1em;
-    margin: 0.1%;
+    background-color: darkslategray;
+    margin: 0.15%;
+}
+
+.array-container {
+    align-items: center;
+    display: flex;
+    margin-top: auto;
+}
+
+.app-footer {
+    display: flex;
+    align-items: center;
+    background-color: #333;
+    margin-top: auto;
+}
+
+.app-header {
+    overflow-x: visible;
+    background-color: #333;
+    align-items: center;
+    margin-bottom: auto;
+    display: flex;
+    flex-direction: row;
+}
+
+#credits {
+    font-size: x-small;
+    text-align: center;
+    margin-top: auto;
 }

@@ -1,66 +1,123 @@
 import React from 'react';
+import ArrayVisualiser from '../ArrayVisualiser/ArrayVisualiser';
+import Button from 'react-bootstrap/Button';
+import DropDownButton from "../Controls/DropDownButton";
 import "./style.css";
-import ReactSlider from 'react-slider';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+import { bubbleSortAnimation } from '../Algorithms/bubbleSort';
+
+const ARRAY_LENGTH = 100;
+const MIN_VALUE = 2;
+const MAX_VALUE = 80;
+const ANIMATION_SPEED = 4;
+
+const COLOR_COMPARED = "pink";
+const COLOR_SWAPPED = "yellow";
+const COLOR_SORTED = "green";
 
 export default class SortingVisualizer extends React.Component {
     constructor(props) {
         super(props);
+
         this.state = {
             array: [],
-            size: 20,
+            algo: 0,
         }
-        this.changeArraySize = this.changeArraySize.bind(this);
+
+        this.containerRef = React.createRef();
+
+        this.changeSortingAlgorithm = this.changeSortingAlgorithm.bind(this);
+        this.sort = this.sort.bind(this);
+        this.swap = this.swap.bind(this);
+        this.resetArray = this.resetArray.bind(this);
     }
 
     componentDidMount() {
         this.resetArray();
+        this.changeSortingAlgorithm(1);
     }
 
     resetArray() {
         const arr = [];
-        for (let i = 0; i < this.state.size; i++) {
-            arr.push(randomIntFromRange(5, 100));
+        for (let i = 0; i < ARRAY_LENGTH; i++) {
+            arr.push(randomIntFromRange(MIN_VALUE, MAX_VALUE));
         }
         this.setState({ array: arr });
     }
 
-    changeArraySize(value) {
-        this.setState({ size: value });
-        this.resetArray();
+    changeSortingAlgorithm(value) {
+        this.setState({ algo: value });
+    }
+
+    sort() {
+        console.log(this.state.array);
+        let animations = bubbleSortAnimation(this.state.array);
+        this.animateArraySorting(animations);
+        console.log(this.state.array);
+    }
+
+    swap(i, j) {
+        const newArr = [...this.state.array];
+        const temp = newArr[i];
+        newArr[i] = newArr[j];
+        newArr[j] = temp;
+        this.setState({ array: newArr });
+    }
+
+    animateArraySorting(animations) {
+        animations.forEach(([indexes, isSwapped], idx) => {
+            setTimeout(() => {
+                if (!isSwapped) {
+                    this.animateVisitingArrayBar(indexes[0]);
+                    this.animateVisitingArrayBar(indexes[1]);
+                } else {
+                    this.swap(indexes[0], indexes[1]);
+                }
+            },
+                idx * ANIMATION_SPEED
+            );
+        });
+    }
+
+    animateVisitingArrayBar(idx) {
+        const arrayBars = this.containerRef.current.children;
+        const visitedBarStyle = arrayBars[idx].style;
+        setTimeout(() => {
+            visitedBarStyle.backgroundColor = COLOR_COMPARED;
+        },
+            ANIMATION_SPEED
+        );
+        setTimeout(() => {
+            arrayBars[idx].style.backgroundColor = '';
+        },
+            ANIMATION_SPEED * 2
+        );
     }
 
     render() {
         const arr = this.state.array;
 
         return (
-            <div className="visualizer-container">
-                <ReactSlider
-                    defaultValue={20}
-                    min={20}
-                    max={100}
-                    className="horizontal-slider"
-                    thumbClassName="example-thumb"
-                    trackClassName="example-track"
-                    onChange={(v) => (
-                        this.changeArraySize(v)
-                    )}></ReactSlider>
-                <div className="flex-container">
-                    {arr.map((value, idx) => (
-                        <div
-                            className="array-bar"
-                            key={idx}
-                            style={{
-                                height: `${value}vh`,
-                                width: `${100 / this.state.size}vw`,
-                            }}>
-                        </div>))}
+            <div className="app-wrapper">
+                <div className="app-header">
+                    <DropDownButton onClickMethod={this.changeSortingAlgorithm}></DropDownButton>
+                </div>
+                <div className="array-container" ref={this.containerRef}>
+                    <ArrayVisualiser array={arr}></ArrayVisualiser>
+                </div>
+                <div className="app-footer">
+                    <Button onClick={() => this.sort()}>Sort</Button>
+                    <Button onClick={() => this.resetArray()}>Shuffle</Button>
+                    <div id="credits">
+                        Made with <span style={{ color: `#e25555`, }}>&#9829;</span> by <a href="https://github.com/aleolux" target="_blank">Adrien Timbert</a>
+                    </div>
                 </div>
             </div>
-        );
+        )
     }
 
 }
-
 
 function randomIntFromRange(minValue, maxValue) {
     return Math.floor(Math.random() * (maxValue - minValue + 1) + minValue);

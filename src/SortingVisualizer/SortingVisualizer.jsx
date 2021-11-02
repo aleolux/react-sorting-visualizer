@@ -7,12 +7,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { bubbleSortAnimation } from '../Algorithms/bubbleSort';
 
-const ARRAY_LENGTH = 100;
+const ARRAY_LENGTH = 40;
 const MIN_VALUE = 2;
 const MAX_VALUE = 80;
-const ANIMATION_SPEED = 4;
+const ANIMATION_SPEED = 15;
 
-const COLOR_COMPARED = "pink";
+const COLOR_COMPARED = "lightblue";
 const COLOR_SWAPPED = "yellow";
 const COLOR_SORTED = "green";
 
@@ -69,9 +69,11 @@ export default class SortingVisualizer extends React.Component {
         animations.forEach(([indexes, isSwapped], idx) => {
             setTimeout(() => {
                 if (!isSwapped) {
-                    this.animateVisitingArrayBar(indexes[0]);
-                    this.animateVisitingArrayBar(indexes[1]);
+                    this.colorArrayBar(indexes[0], COLOR_COMPARED);
+                    this.colorArrayBar(indexes[1], COLOR_COMPARED);
                 } else {
+                    this.colorArrayBar(indexes[0], COLOR_SWAPPED);
+                    this.colorArrayBar(indexes[1], COLOR_SWAPPED);
                     this.swap(indexes[0], indexes[1]);
                 }
             },
@@ -80,11 +82,11 @@ export default class SortingVisualizer extends React.Component {
         });
     }
 
-    animateVisitingArrayBar(idx) {
+    colorArrayBar(idx, color) {
         const arrayBars = this.containerRef.current.children;
         const visitedBarStyle = arrayBars[idx].style;
         setTimeout(() => {
-            visitedBarStyle.backgroundColor = COLOR_COMPARED;
+            visitedBarStyle.backgroundColor = color;
         },
             ANIMATION_SPEED
         );

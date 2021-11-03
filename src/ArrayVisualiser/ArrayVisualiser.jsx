@@ -4,10 +4,7 @@ import "./style.css";
 /*https://www.robinwieruch.de/react-pass-props-to-component*/
 
 export default class ArrayVisualiser extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
+    
     render() {
         if (this.props.isMobile) {
             return (<>

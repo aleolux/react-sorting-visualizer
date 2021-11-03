@@ -1,20 +1,21 @@
 import React from 'react';
 import ArrayVisualiser from '../ArrayVisualiser/ArrayVisualiser';
-import Button from 'react-bootstrap/Button';
 import DropDownButton from "../Controls/DropDownButton";
+
 import "./style.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { bubbleSortAnimation } from '../Algorithms/bubbleSort';
+import { insertionSortAnimation } from '../Algorithms/insertionSwap';
+import { selectionSortAnimation } from '../Algorithms/selectionSort';
 
-const ARRAY_LENGTH = 40;
-const MIN_VALUE = 2;
-const MAX_VALUE = 80;
-const ANIMATION_SPEED = 15;
+const ARRAY_LENGTH = 60;
+const ANIMATION_SPEED = 10;
+const MIN_VALUE = 3;
 
-const COLOR_COMPARED = "lightblue";
+const COLOR_COMPARED = "#DE354C";
 const COLOR_SWAPPED = "yellow";
-const COLOR_SORTED = "green";
+const COLOR_SORTED = "#1BBC9B";
 
 export default class SortingVisualizer extends React.Component {
     constructor(props) {
@@ -23,27 +24,42 @@ export default class SortingVisualizer extends React.Component {
         this.state = {
             array: [],
             algo: 0,
+            isMobile: false,
+            isSorting: false,
         }
 
         this.containerRef = React.createRef();
 
         this.changeSortingAlgorithm = this.changeSortingAlgorithm.bind(this);
-        this.sort = this.sort.bind(this);
-        this.swap = this.swap.bind(this);
-        this.resetArray = this.resetArray.bind(this);
+        this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+
     }
 
     componentDidMount() {
         this.resetArray();
-        this.changeSortingAlgorithm(1);
+        this.changeSortingAlgorithm(0);
+        this.updateWindowDimensions();
+        window.addEventListener('resize', this.updateWindowDimensions);
     }
 
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.updateWindowDimensions);
+    }
+
+    updateWindowDimensions() {
+        window.innerWidth <= 760 ? this.setState({ isMobile: true }) : this.setState({ isMobile: false });
+    }
+
+    /* GUI methods */
     resetArray() {
+        if (this.state.isSorting) return;
         const arr = [];
-        for (let i = 0; i < ARRAY_LENGTH; i++) {
-            arr.push(randomIntFromRange(MIN_VALUE, MAX_VALUE));
+        for (let i = MIN_VALUE; i < ARRAY_LENGTH + MIN_VALUE; i++) {
+            arr.push(i);
         }
+        shuffle(arr);
         this.setState({ array: arr });
+        this.animateWholeArray('');
     }
 
     changeSortingAlgorithm(value) {
@@ -51,12 +67,30 @@ export default class SortingVisualizer extends React.Component {
     }
 
     sort() {
-        console.log(this.state.array);
-        let animations = bubbleSortAnimation(this.state.array);
+        let animations = [];
+        switch (this.state.algo) {
+            case 0:
+                animations = bubbleSortAnimation(this.state.array);
+                break;
+            case 1:
+                animations = insertionSortAnimation(this.state.array);
+                break;
+            case 2:
+                animations = selectionSortAnimation(this.state.array);
+                break;
+            case 3:
+                return;
+            case 4:
+                return;
+            case 5:
+                return;
+            default:
+                return;
+        }
         this.animateArraySorting(animations);
-        console.log(this.state.array);
     }
 
+    /* Array methods */
     swap(i, j) {
         const newArr = [...this.state.array];
         const temp = newArr[i];
@@ -65,24 +99,46 @@ export default class SortingVisualizer extends React.Component {
         this.setState({ array: newArr });
     }
 
+    /* Animation methods */
     animateArraySorting(animations) {
+        if (this.state.isSorting) return;
+        this.setState({ isSorting: true });
+
         animations.forEach(([indexes, isSwapped], idx) => {
             setTimeout(() => {
                 if (!isSwapped) {
-                    this.colorArrayBar(indexes[0], COLOR_COMPARED);
-                    this.colorArrayBar(indexes[1], COLOR_COMPARED);
+                    this.animateArrayBar(indexes[0], COLOR_COMPARED);
+                    this.animateArrayBar(indexes[1], COLOR_COMPARED);
                 } else {
-                    this.colorArrayBar(indexes[0], COLOR_SWAPPED);
-                    this.colorArrayBar(indexes[1], COLOR_SWAPPED);
+                    this.animateArrayBar(indexes[0], COLOR_SWAPPED);
+                    this.animateArrayBar(indexes[1], COLOR_SWAPPED);
                     this.swap(indexes[0], indexes[1]);
                 }
             },
                 idx * ANIMATION_SPEED
             );
         });
+        setTimeout(() => { 
+            this.animateWholeArray(COLOR_SORTED);
+            this.setState({ isSorting: false });
+        },
+            animations.length * ANIMATION_SPEED
+        );
     }
 
-    colorArrayBar(idx, color) {
+    animateWholeArray(color) {
+        const arrayBars = this.containerRef.current.children;
+        this.state.array.forEach((value, idx) => {
+            setTimeout(() => {
+                const visitedBarStyle = arrayBars[idx].style;
+                visitedBarStyle.backgroundColor = color;
+            },
+                idx * ANIMATION_SPEED);
+        }
+        );
+    }
+
+    animateArrayBar(idx, color) {
         const arrayBars = this.containerRef.current.children;
         const visitedBarStyle = arrayBars[idx].style;
         setTimeout(() => {
@@ -106,13 +162,15 @@ export default class SortingVisualizer extends React.Component {
                     <DropDownButton onClickMethod={this.changeSortingAlgorithm}></DropDownButton>
                 </div>
                 <div className="array-container" ref={this.containerRef}>
-                    <ArrayVisualiser array={arr}></ArrayVisualiser>
+                    <ArrayVisualiser array={arr} isMobile={this.state.isMobile}></ArrayVisualiser>
                 </div>
                 <div className="app-footer">
-                    <Button onClick={() => this.sort()}>Sort</Button>
-                    <Button onClick={() => this.resetArray()}>Shuffle</Button>
-                    <div id="credits">
-                        Made with <span style={{ color: `#e25555`, }}>&#9829;</span> by <a href="https://github.com/aleolux" target="_blank">Adrien Timbert</a>
+                    <div className="buttons">
+                        <button className="app-btn" onClick={() => this.sort()}>Sort</button>
+                        <button className="app-btn" onClick={() => this.resetArray()}>Shuffle</button>
+                    </div>
+                    <div className="credits">
+                        <p>Made with <span style={{ color: `#e25555`, }}>&#9829;</span> by <a href="https://github.com/aleolux" target="_blank" rel="noreferrer">Adrien Timbert</a></p>
                     </div>
                 </div>
             </div>
@@ -121,6 +179,12 @@ export default class SortingVisualizer extends React.Component {
 
 }
 
-function randomIntFromRange(minValue, maxValue) {
-    return Math.floor(Math.random() * (maxValue - minValue + 1) + minValue);
+/* from https://javascript.info/task/shuffle */
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
 }
+
+/* windows event listener from https://stackoverflow.com/questions/36862334/get-viewport-window-height-in-reactjs */

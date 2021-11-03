@@ -1,3 +1,38 @@
+:root {
+    --bright-red: #DE354C;
+    --deep-red: #932432;
+    --pure-purple: #3C1874;
+    --purple-tinged-grey: #283747;
+    --cloud: #F3F3F3;
+}
+
+
+/* mobile */
+
+@media only screen and (max-width: 760px) {
+    .array-container {
+        align-items: center;
+        display: flex;
+        margin-top: auto;
+        flex-direction: column;
+    }
+    .app-footer .buttons {
+        flex-direction: column;
+    }
+}
+
+
+/* desktop and tablets disaply */
+
+@media only screen and (min-width: 760px) {
+    .app-footer .buttons {
+        flex-direction: row;
+    }
+}
+
+
+/* all */
+
 .app-wrapper {
     display: flex;
     flex-direction: column;
@@ -5,7 +40,7 @@
 }
 
 .array-bar {
-    background-color: darkslategray;
+    background-color: var(--purple-tinged-grey);
     margin: 0.15%;
 }
 
@@ -15,24 +50,78 @@
     margin-top: auto;
 }
 
-.app-footer {
-    display: flex;
-    align-items: center;
-    background-color: #333;
-    margin-top: auto;
-}
-
 .app-header {
     overflow-x: visible;
-    background-color: #333;
-    align-items: center;
+    background-color: transparent;
+    justify-content: center;
     margin-bottom: auto;
     display: flex;
     flex-direction: row;
 }
 
-#credits {
-    font-size: x-small;
-    text-align: center;
+.app-footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: var(--purple-tinged-grey);
     margin-top: auto;
+}
+
+.app-footer .buttons {
+    display: flex;
+    justify-content: center;
+    margin: 1%;
+}
+
+.app-footer .credits {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    font-size: x-small;
+    color: var(--cloud);
+}
+
+.app-btn {
+    background-color: var(--pure-purple);
+    color: var(--cloud);
+    border-radius: 0.4em;
+    border-width: 0.05em;
+    background-color: transparent;
+    padding: 0.5em;
+    margin-top: 0;
+    margin: 1%;
+    font-weight: bold;
+}
+
+.app-btn:focus {
+    outline: none;
+}
+
+.app-btn:hover {
+    color: var(--purple-tinged-grey);
+    background-color: var(--cloud);
+}
+
+a:link {
+    color: var(--cloud);
+    background-color: transparent;
+    text-decoration: none;
+}
+
+a:visited {
+    color: var(--cloud);
+    background-color: transparent;
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--bright-red);
+    background-color: transparent;
+    text-decoration: underline;
+}
+
+a:active {
+    color: var(--cloud);
+    background-color: transparent;
+    text-decoration: underline;
 }

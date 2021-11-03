@@ -9,20 +9,21 @@ export default function DropDownButton({onClickMethod}) {
         { name: 'Insertion Sort', value: 1 },
         { name: 'Selection Sort', value: 2 },
         { name: 'Quick Sort', value: 3 },
-        { name: 'Merge Sort', value: 4 },
+        { name: 'Heap Sort', value: 4 },
+        { name: 'Merge Sort', value: 5 },
     ];
 
     return (
         <Dropdown>
             <Dropdown.Toggle
                 variant="secondary"
-                menuVariant="dark"
                 className="mt-2"
-                style={{margin: `5%`}}>
+                size="lg"
+                style={ddStyle}>
                 {algos[algo].name}
             </Dropdown.Toggle>
 
-            <Dropdown.Menu>
+            <Dropdown.Menu variant="dark">
                 {algos.filter(item => item.value !== algo).map(
                     item => <Dropdown.Item
                             key={item.value}
@@ -32,4 +33,10 @@ export default function DropDownButton({onClickMethod}) {
         </Dropdown>
     );
 
+}
+
+const ddStyle = {
+    margin: `5%`,
+    backgroundColor: `#283747`,
+    color: `F3F3F3`,
 }

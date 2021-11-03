@@ -8,6 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { bubbleSortAnimation } from '../Algorithms/bubbleSort';
 import { insertionSortAnimation } from '../Algorithms/insertionSwap';
 import { selectionSortAnimation } from '../Algorithms/selectionSort';
+import { quickSortAnimation } from '../Algorithms/quickSort';
 
 const ARRAY_LENGTH = 60;
 const ANIMATION_SPEED = 10;
@@ -79,7 +80,8 @@ export default class SortingVisualizer extends React.Component {
                 animations = selectionSortAnimation(this.state.array);
                 break;
             case 3:
-                return;
+                animations = quickSortAnimation(this.state.array);
+                break;
             case 4:
                 return;
             case 5:

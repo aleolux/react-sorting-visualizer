@@ -9,6 +9,7 @@ import { bubbleSortAnimation } from '../Algorithms/bubbleSort';
 import { insertionSortAnimation } from '../Algorithms/insertionSwap';
 import { selectionSortAnimation } from '../Algorithms/selectionSort';
 import { quickSortAnimation } from '../Algorithms/quickSort';
+import { heapSortAnimation } from '../Algorithms/heapSort';
 
 const ARRAY_LENGTH = 60;
 const ANIMATION_SPEED = 10;
@@ -83,7 +84,8 @@ export default class SortingVisualizer extends React.Component {
                 animations = quickSortAnimation(this.state.array);
                 break;
             case 4:
-                return;
+                animations = heapSortAnimation(this.state.array);
+                break;
             case 5:
                 return;
             default:
@@ -105,6 +107,7 @@ export default class SortingVisualizer extends React.Component {
     animateArraySorting(animations) {
         if (this.state.isSorting) return;
         this.setState({ isSorting: true });
+        this.resetArrayColor();
 
         animations.forEach(([indexes, isSwapped], idx) => {
             setTimeout(() => {
@@ -120,11 +123,11 @@ export default class SortingVisualizer extends React.Component {
                 idx * ANIMATION_SPEED
             );
         });
-        setTimeout(() => { 
+        setTimeout(() => {
             this.animateWholeArray(COLOR_SORTED);
             this.setState({ isSorting: false });
         },
-            animations.length * ANIMATION_SPEED
+            animations.length * ANIMATION_SPEED + 10
         );
     }
 
@@ -152,6 +155,15 @@ export default class SortingVisualizer extends React.Component {
             arrayBars[idx].style.backgroundColor = '';
         },
             ANIMATION_SPEED * 2
+        );
+    }
+
+    resetArrayColor() {
+        const arrayBars = this.containerRef.current.children;
+        this.state.array.forEach((value, idx) => {
+            const visitedBarStyle = arrayBars[idx].style;
+            visitedBarStyle.backgroundColor = '';
+        }
         );
     }
 

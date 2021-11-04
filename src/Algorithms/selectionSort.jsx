@@ -15,8 +15,9 @@ function selectionSort(array, animations) {
             animations.push([[startIdx, i], false]);
             if (array[smallestIdx] > array[i]) smallestIdx = i;
         };
+        animations.push([[startIdx, array[smallestIdx]], true]);
+        animations.push([[smallestIdx, array[startIdx]], true]);
         swap(array, startIdx, smallestIdx);
-        animations.push([[startIdx, smallestIdx], true]);
         startIdx ++;
     }
 }

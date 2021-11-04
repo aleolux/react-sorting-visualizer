@@ -12,14 +12,13 @@ function bubbleSort(array, animations) {
     while (!isSorted) {
         isSorted = true;
         for (let i = 0; i < array.length-1; i++) {
-            let frame = [];
-            frame.push([i, i+1], false)
+            animations.push([[i, i+1], false]);
             if (array[i] > array[i + 1]) {
                 isSorted = false;
+                animations.push([[i, array[i+1]], true]);
+                animations.push([[i+1, array[i]], true]);
                 swap(array, i, i + 1);
-                frame[1] = true;
             }
-            animations.push(frame);
         }
     }
 }

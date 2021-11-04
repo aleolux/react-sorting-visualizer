@@ -12,7 +12,8 @@ function insertionSort(array, animations) {
         let j = i;
         animations.push([[i, i], false]);
         while ((j > 0) && (array[j] < array[j - 1])) {
-            animations.push([[j, j-1], true]);
+            animations.push([[j, array[j-1]], true]);
+            animations.push([[j-1, array[j]], true]);
             swap(array, j, j - 1);
             j -= 1;
         };

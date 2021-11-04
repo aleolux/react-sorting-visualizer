@@ -10,8 +10,9 @@ export function heapSortAnimation(array) {
 function heapSort(array, animations) {
     buildMaxHeap(array, animations);
     for (let endIdx = array.length - 1; endIdx > 0; endIdx--) {
+        animations.push([[0, array[endIdx]], true])
+        animations.push([[endIdx, array[0]], true])
         swap(array, 0, endIdx);
-        animations.push([[0, endIdx], true])
         siftDown(0, endIdx -1, array, animations);
     }
 }
@@ -34,8 +35,10 @@ function siftDown(currentIdx, endIdx, heap, animations) {
         else {
             idxToSwap = childOneIndex;
         }
+        animations.push([[currentIdx, idxToSwap], false])
         if (heap[idxToSwap] > heap[currentIdx]) {
-            animations.push([[currentIdx, idxToSwap], true])
+            animations.push([[currentIdx, heap[idxToSwap]], true])
+            animations.push([[idxToSwap, heap[currentIdx]], true])
             swap(heap, currentIdx, idxToSwap);
             currentIdx = idxToSwap;
             childOneIndex = currentIdx * 2 + 1;

@@ -11,9 +11,9 @@
 This project is a React sorting algorithms visualizer. The user can visualize how a given algorithm sort a random list. The goal of this project was to enhance my React/JS/CSS skills. 
 
 ## Installation
-Try it online [here](https://keen-jepsen-125f97.netlify.app/)
+- Try it online [here](https://keen-jepsen-125f97.netlify.app/)
 
-Or download the source code and run using [Node](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) 
+- Or download the source code and run it using [Node](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm):
 ```bash
 $ npm start
 ```
@@ -34,7 +34,7 @@ Open http://localhost:3000 to view it in the browser.
  - The app is mobile user friendly:
  
 <p align="left">
- <img src="assets/mobile.gif" width="500" alt="demo on mobile">
+ <img src="assets/mobile.gif" width="250" alt="demo on mobile">
 <p>
  
 

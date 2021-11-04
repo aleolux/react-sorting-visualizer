@@ -10,6 +10,7 @@ import { insertionSortAnimation } from '../Algorithms/insertionSwap';
 import { selectionSortAnimation } from '../Algorithms/selectionSort';
 import { quickSortAnimation } from '../Algorithms/quickSort';
 import { heapSortAnimation } from '../Algorithms/heapSort';
+import { mergeSortAnimation } from '../Algorithms/mergeSort';
 
 const ARRAY_LENGTH = 60;
 const ANIMATION_SPEED = 10;
@@ -87,7 +88,8 @@ export default class SortingVisualizer extends React.Component {
                 animations = heapSortAnimation(this.state.array);
                 break;
             case 5:
-                return;
+                animations = mergeSortAnimation(this.state.array);
+                break;
             default:
                 return;
         }
@@ -95,11 +97,9 @@ export default class SortingVisualizer extends React.Component {
     }
 
     /* Array methods */
-    swap(i, j) {
+    override(idx, newValue) {
         const newArr = [...this.state.array];
-        const temp = newArr[i];
-        newArr[i] = newArr[j];
-        newArr[j] = temp;
+        newArr[idx] = newValue;
         this.setState({ array: newArr });
     }
 
@@ -109,15 +109,14 @@ export default class SortingVisualizer extends React.Component {
         this.setState({ isSorting: true });
         this.resetArrayColor();
 
-        animations.forEach(([indexes, isSwapped], idx) => {
+        animations.forEach(([values, isSwapped], idx) => {
             setTimeout(() => {
                 if (!isSwapped) {
-                    this.animateArrayBar(indexes[0], COLOR_COMPARED);
-                    this.animateArrayBar(indexes[1], COLOR_COMPARED);
+                    this.animateArrayBar(values[0], COLOR_COMPARED);
+                    this.animateArrayBar(values[1], COLOR_COMPARED);
                 } else {
-                    this.animateArrayBar(indexes[0], COLOR_SWAPPED);
-                    this.animateArrayBar(indexes[1], COLOR_SWAPPED);
-                    this.swap(indexes[0], indexes[1]);
+                    this.animateArrayBar(values[0], COLOR_SWAPPED);
+                    this.override(values[0], values[1]);
                 }
             },
                 idx * ANIMATION_SPEED
@@ -127,7 +126,7 @@ export default class SortingVisualizer extends React.Component {
             this.animateWholeArray(COLOR_SORTED);
             this.setState({ isSorting: false });
         },
-            animations.length * ANIMATION_SPEED + 10
+            animations.length * ANIMATION_SPEED + 30
         );
     }
 
